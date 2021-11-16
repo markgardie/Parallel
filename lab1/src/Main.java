@@ -1,4 +1,4 @@
-class TreadLab1 extends Thread{
+class MyThread extends Thread{
 
     double vect[];
     int startIndex;
@@ -6,7 +6,7 @@ class TreadLab1 extends Thread{
     double max;
     double min;
 
-    public TreadLab1(double[] vect, int startIndex, int endIndex) {
+    public MyThread(double[] vect, int startIndex, int endIndex) {
         this.vect = vect;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
@@ -38,7 +38,7 @@ class TreadLab1 extends Thread{
 
 }
 
-public class Lab1 {
+public class Main {
     public static int SIZE = 1000;
     public static int NUMBER_JOBS = 10;
     public static int RANDOM_KOEF = 100;
@@ -68,11 +68,11 @@ public class Lab1 {
         System.out.println("Max:" + maxSerial);
         System.out.println("Min:" + minSerial);
 
-        TreadLab1 TreadArrray[] = new TreadLab1[NUMBER_JOBS];
+        MyThread TreadArrray[] = new MyThread[NUMBER_JOBS];
 
         for(int i = 0; i < NUMBER_JOBS; i++){
 
-            TreadArrray[i] = new TreadLab1(vect,
+            TreadArrray[i] = new MyThread(vect,
                     SIZE/ NUMBER_JOBS * i,
                     i== NUMBER_JOBS -1 ?SIZE:SIZE/ NUMBER_JOBS * (i + 1) );
             TreadArrray[i].start();
