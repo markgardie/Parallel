@@ -9,7 +9,9 @@ public class CPUProcessFlow implements Runnable {
     private final int n; //number of processes to generate
     private boolean finished; //if flow is finished
 
-    /**  Constructor **/
+    /**
+     * Constructor
+     */
     public CPUProcessFlow(int n) {
         if(n <= 0) {
             throw new IllegalArgumentException();
@@ -47,12 +49,16 @@ public class CPUProcessFlow implements Runnable {
         System.out.println(this + " finished");
     }
 
-    /** Getter **/
+    /**
+     * Getter
+     */
     public synchronized int getId() {
         return id;
     }
 
-    /** Formatting method **/
+    /**
+     * Formatting method
+     */
     @Override
     public String toString() {
         return String.format("ProcessFlow:%2d",id);
