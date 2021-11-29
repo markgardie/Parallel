@@ -2,51 +2,58 @@ package com.company;
 
 public class CPUProcess implements Runnable {
 
-    /**
-     * Process fields
-     */
     private static int counter = 0; //additional var for setting id`s
-    private int id; //process unique id
-    private final int time;   // time to next process
-    private final int flow; //flow id that generated this process
+    private final int id = counter++; //process flow unique id
+    private static final int MIN_TIME_TO_NEXT = 10;     // time to next process started
+    private static final int MAX_TIME_TO_NEXT = 500;
+    private final int n; //number of processes to generate
+    private boolean finished; //if flow is finished
 
     /**
-     * Process Constructor
+     * Constructor
      */
-    public CPUProcess(int time, int flow) {
-        this.time = time;
-        this.flow = flow;
-        setId();
+    public CPUProcess(int n) {
+        if(n <= 0) {
+            throw new IllegalArgumentException();
+        }
+        this.n = n;
+
     }
 
     /**
-     * Set unique id to any process
+     * Creates new Process with time to next and duration parameters
+     * Generates random time to start next process
+     *
+     * @return generated process object
      */
-    private synchronized void setId() {
-        id = counter++;
+    public Process genProcess() {
+        int timeToNext = (int) (Math.random() * (MAX_TIME_TO_NEXT - MIN_TIME_TO_NEXT) + MIN_TIME_TO_NEXT);
+        return new Process(timeToNext, id);
     }
 
     /**
-     * Method run for creating Thread
+     * Generates  n number of processes
+     * waits process.getTime() milliseconds after
+     * generated process
      */
     @Override
     public void run() {
+        for (int i = 0; i < n; i++) {
+            Process p = genProcess();
+            System.out.println(String.format("%s  %s time:%4d",p,this, p.getTime()));
 
+            //Thread.sleep(p.getTime());
+        }
+
+
+        System.out.println(this + " finished");
     }
 
     /**
-     * Class fields getters
+     * Getter
      */
-    public int getId() {
+    public synchronized int getId() {
         return id;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public int getFlow() {
-        return flow;
     }
 
     /**
@@ -54,8 +61,6 @@ public class CPUProcess implements Runnable {
      */
     @Override
     public String toString() {
-        return String.format("Process:%2d flow:%2d time:%4d",id,flow,time);
-
+        return String.format("ProcessFlow:%2d",id);
     }
-
 }

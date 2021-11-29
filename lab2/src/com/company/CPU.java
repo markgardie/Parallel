@@ -12,8 +12,8 @@ public class CPU implements Runnable{
     private final int id = counter++; //cpu unique id
     private final int time;                             // duration of process service
     private boolean busy; //is cpu busy
-    private CPUProcess process; //process that cpu is processing
-    private CPUProcess lost; // lost process
+    private Process process; //process that cpu is processing
+    private Process lost; // lost process
 
     /**
      * Constructor of CPU
@@ -28,12 +28,12 @@ public class CPU implements Runnable{
     /**
      * Sets Process to perform processing or exit without ones
      */
-    public synchronized void setTask(CPUProcess p) {
+    public synchronized void setTask(Process p) {
         setProcess(p);
         setBusy(true);
     }
 
-    public synchronized void setProcess(CPUProcess process) {
+    public synchronized void setProcess(Process process) {
         this.process = process;
     }
 
@@ -49,7 +49,7 @@ public class CPU implements Runnable{
     /**
      * Copy process to lost for restoring in queue
      */
-    public synchronized void setLost(CPUProcess p) {
+    public synchronized void setLost(Process p) {
         lost = p;
     }
 
@@ -58,7 +58,7 @@ public class CPU implements Runnable{
      *
      * @return process or null is stack is empty
      */
-    public synchronized CPUProcess getLost() {
+    public synchronized Process getLost() {
         return lost;
     }
 
@@ -67,7 +67,7 @@ public class CPU implements Runnable{
      *
      * @return
      */
-    public synchronized CPUProcess getProcess() {
+    public synchronized Process getProcess() {
         if (busy && process != null) {
             return process;
         }

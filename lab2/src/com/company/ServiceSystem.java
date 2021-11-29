@@ -6,7 +6,7 @@ public class ServiceSystem {
     private static final int NUMBER_OF_PROCESS = 15;
 
     private final CPU[] cpus;
-    private final CPUProcessFlow[] flows;
+    private final CPUProcess[] flows;
     private final Thread[] flowThreads;
     private final Thread[] cpuThreads;
     private int processLost;
@@ -25,10 +25,10 @@ public class ServiceSystem {
             cpuThreads[i] = new Thread(cpus[i]);    // flow for this object
         }
 
-        flows = new CPUProcessFlow[nFlow];
+        flows = new CPUProcess[nFlow];
         flowThreads = new Thread[nFlow];
         for (int i = 0; i < nFlow; i++) {
-            flows[i] = new CPUProcessFlow(nProcesses);  // runnable object
+            flows[i] = new CPUProcess(nProcesses);  // runnable object
             flowThreads[i] = new Thread(flows[i]);   // thread for this object
         }
 
