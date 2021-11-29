@@ -5,6 +5,7 @@ public class CPU extends Thread {
     private final int id = counter++;
     private final int time;
     private boolean busy;
+    private Process process;
 
     public CPU(int max_duration, int min_duration){
         this.time = (int) (Math.random() * ((max_duration - min_duration) + min_duration));
@@ -17,6 +18,15 @@ public class CPU extends Thread {
 
     public synchronized boolean isBusy() {
         return busy;
+    }
+
+    public synchronized void setTask(Process p) {
+        setProcess(p);
+        setBusy(true);
+    }
+
+    public synchronized void setProcess(Process process) {
+        this.process = process;
     }
 
     @Override
