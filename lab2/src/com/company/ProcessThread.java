@@ -7,6 +7,7 @@ public class ProcessThread extends Thread{
     private boolean finished;
     private final int max_time_to_next;
     private final int min_time_to_next;
+    private final Process processes[];
 
     public ProcessThread(int processes_amount, int max_time_to_next, int min_time_to_next) {
         if(processes_amount <= 0) {
@@ -15,6 +16,7 @@ public class ProcessThread extends Thread{
         this.processes_amount = processes_amount;
         this.max_time_to_next = max_time_to_next;
         this.min_time_to_next = min_time_to_next;
+        this.processes = new Process[processes_amount];
 
     }
 
@@ -23,21 +25,32 @@ public class ProcessThread extends Thread{
         return new Process(timeToNext, id);
     }
 
+    public synchronized Process getProcess(int i){
+        return processes[i];
+    }
+
+    public synchronized Process[] getAllProcesses(){
+        return processes;
+    }
+
     public synchronized int _getId() {
         return id;
     }
 
     @Override
     public String toString() {
-        return String.format("ProcessFlow:%2d",id);
+        return String.format("ProcessThread:%2d",id);
     }
 
     @Override
     public void run() {
         System.out.println(this + " started");
+        /**
         try {
+
             for (int i = 0; i < processes_amount; i++) {
                 Process p = generateProcess();
+                processes[i] = p;
                 System.out.println(String.format("%s  %s time:%4d",p,this, p.getTime()));
 
                 Thread.sleep(p.getTime());
@@ -45,7 +58,7 @@ public class ProcessThread extends Thread{
 
         } catch (InterruptedException e) {
             System.out.println(this + " interrupted");
-        }
+        }**/
         System.out.println(this + " finished");
     }
 

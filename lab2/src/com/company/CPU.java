@@ -29,6 +29,40 @@ public class CPU extends Thread {
         this.process = process;
     }
 
+    public synchronized Process getProcess() {
+        if (busy && process != null) {
+            return process;
+        }
+        return null;
+    }
+
+    public void run() {
+        System.out.println(this + " started");
+        while (!Thread.interrupted()) {
+            try {
+                if (busy) {
+                    if (process == null) {
+                        throw new IllegalArgumentException("something wrong with CPU:" + this);
+                    }
+                    System.out.println(this + " started processing of:" + process);
+
+                    Thread.sleep(time);
+                    System.out.println(this + " finished processing of:" + process);
+                    busy = false;
+                    setProcess(null);
+
+                }
+            } catch (InterruptedException e) {
+                if(process == null) {
+                    System.out.println(this+" request to exit received");
+                    break;
+                }
+            }
+        }
+
+        System.out.println(this + " finished");
+    }
+
     @Override
     public String toString() {
         return "CPU:" + id +

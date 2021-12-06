@@ -30,7 +30,7 @@ public class Process {
 
     @Override
     public String toString() {
-        return String.format("Process:%2d flow:%2d time:%4d",id,process_thread_id,time);
+        return String.format("Process:%2d thread:%2d time:%4d",id,process_thread_id,time);
 
     }
 }

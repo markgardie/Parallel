@@ -1,9 +1,9 @@
 package com.company;
 
 public class ServiceSystem {
-    private static final int NUMBER_OF_CPU = 10;
+    private static final int NUMBER_OF_CPU = 5;
     private static final int NUMBER_OF_PROCESS_THREADS = 1;
-    private static final int NUMBER_OF_PROCESS = 15;
+    private static final int NUMBER_OF_PROCESS = 5;
     private static final int MIN_DURATION = 50;
     private static final int MAX_DURATION = 250;
     private static final int MIN_TIME_TO_NEXT = 10;
@@ -25,7 +25,7 @@ public class ServiceSystem {
         }
     }
 
-    private void runThreads() {
+    public void runThreads() {
         for (int i = 0; i < NUMBER_OF_CPU; i++) {
             cpus[i].start();
         }
@@ -35,5 +35,30 @@ public class ServiceSystem {
         }
     }
 
+    public boolean isAlive() {
+        for (int i = 0; i < NUMBER_OF_PROCESS_THREADS; i++) {
+            if (process_threads[i].isAlive()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        ServiceSystem ss = new ServiceSystem();
+        ss.runThreads();
+
+        Process p;
+
+        for(int i = 0; i < NUMBER_OF_PROCESS; i++) {
+            p = ss.process_threads[0].generateProcess();
+            for(int j = 0; j < NUMBER_OF_CPU; j++) {
+                if (!ss.cpus[i].isBusy()) {
+                    ss.cpus[i].setTask(p);
+                }
+            }
+        }
+
+    }
 
 }
