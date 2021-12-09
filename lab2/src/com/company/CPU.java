@@ -1,15 +1,19 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class CPU extends Thread {
     private static int counter = 0;
     private final int id = counter++;
     private final int time;
     private boolean busy;
     private Process process;
+    private ArrayList<Process> processed;
 
     public CPU(int max_duration, int min_duration){
         this.time = (int) (Math.random() * ((max_duration - min_duration) + min_duration));
         this.busy = false;
+        this.processed = new ArrayList<Process>();
     }
 
     public synchronized void setBusy(boolean busy) {
@@ -29,11 +33,8 @@ public class CPU extends Thread {
         this.process = process;
     }
 
-    public synchronized Process getProcess() {
-        if (busy && process != null) {
-            return process;
-        }
-        return null;
+    public ArrayList<Process> getProcessed() {
+        return processed;
     }
 
     public void run() {
@@ -48,6 +49,7 @@ public class CPU extends Thread {
 
                     Thread.sleep(time);
                     System.out.println(this + " finished processing of:" + process);
+                    processed.add(process);
                     busy = false;
                     setProcess(null);
 
