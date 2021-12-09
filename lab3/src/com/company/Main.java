@@ -6,10 +6,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 public class Main {
     public static void main(String[] args) {
-        int[] array = {4, 10, 1, 5, 11, 6, 8, 3, 5, 5};
+        int[] array = {4, 10, 1, 5, 11, 6, 8, 3, 5, 5, 6};
         System.out.println(findMin(array).get());
         System.out.println(findMax(array).get());
-        System.out.println(findElem(array, 5).get());
+        System.out.println(findElem(array, 6).get());
     }
 
     public static AtomicInteger findMin(int[] array) {
@@ -54,21 +54,23 @@ public class Main {
     }
 
     public static AtomicInteger findElem(int[] array, int condition) {
-        AtomicInteger atomicCondition = new AtomicInteger();
-        atomicCondition.set(condition);
+        AtomicInteger atomicElemCount = new AtomicInteger();
+        atomicElemCount.set(0);
         IntStream.of(array).parallel().forEach(x -> {
             int oldValue;
             int newValue;
             do {
-                oldValue = atomicCondition.get();
+                oldValue = atomicElemCount.get();
                 if (x == condition) {
-                    oldValue++;
+                    newValue = oldValue + 1;
                 }
-                newValue = oldValue;
+                else {
+                    newValue = oldValue;
+                }
 
-            }while (!atomicCondition.compareAndSet(oldValue, newValue));
+            }while (!atomicElemCount.compareAndSet(oldValue, newValue));
 
         });
-        return atomicCondition;
+        return atomicElemCount;
     }
 }
