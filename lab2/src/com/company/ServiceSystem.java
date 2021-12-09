@@ -1,23 +1,23 @@
 package com.company;
 
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+
 public class ServiceSystem {
-    private static final int NUMBER_OF_CPU = 5;
     private static final int NUMBER_OF_PROCESS_THREADS = 1;
-    private static final int NUMBER_OF_PROCESS = 5;
+    private static final int NUMBER_OF_PROCESS = 10;
     private static final int MIN_DURATION = 50;
     private static final int MAX_DURATION = 250;
     private static final int MIN_TIME_TO_NEXT = 10;
     private static final int MAX_TIME_TO_NEXT = 500;
 
-    private final CPU[] cpus;
+    private final ArrayList<CPU> cpus;
     private final ProcessThread[] process_threads;
 
     public ServiceSystem(){
 
-        cpus = new CPU[NUMBER_OF_CPU];
-        for (int i = 0; i < NUMBER_OF_CPU; i++) {
-            cpus[i] = new CPU(MAX_DURATION, MIN_DURATION);
-        }
+        cpus = new ArrayList<CPU>();
+        cpus.add(new CPU(MAX_DURATION, MIN_DURATION));
 
         process_threads = new ProcessThread[NUMBER_OF_PROCESS_THREADS];
         for (int i = 0; i < NUMBER_OF_PROCESS_THREADS; i++) {
@@ -26,9 +26,7 @@ public class ServiceSystem {
     }
 
     public void runThreads() {
-        for (int i = 0; i < NUMBER_OF_CPU; i++) {
-            cpus[i].start();
-        }
+        cpus.get(0).start();
 
         for (int i = 0; i < NUMBER_OF_PROCESS_THREADS; i++) {
             process_threads[i].start();
@@ -48,17 +46,34 @@ public class ServiceSystem {
         ServiceSystem ss = new ServiceSystem();
         ss.runThreads();
 
+        ProcessThread processThread = ss.process_threads[0];
+        ArrayList<Process> processes = processThread.getAllProcesses();
+        ArrayList<CPU> cpus = ss.cpus;
         Process p;
 
-        for(int i = 0; i < NUMBER_OF_PROCESS; i++) {
-            p = ss.process_threads[0].generateProcess();
-            for(int j = 0; j < NUMBER_OF_CPU; j++) {
-                if (!ss.cpus[i].isBusy()) {
-                    ss.cpus[i].setTask(p);
+        while (processThread.isAlive()) {
+            if(!processes.isEmpty()) {
+                p = processes.remove(processes.size() - 1);
+                for (int i = 0; i < cpus.size(); i++) {
+                    if (!cpus.get(i).isBusy()) {
+                        cpus.get(i).setTask(p);
+                    }
+                    else {
+                        if (i+2 > cpus.size()) {
+                            cpus.add(new CPU(MAX_DURATION, MIN_DURATION));
+                            cpus.get(cpus.size() - 1).start();
+                        }
+                    }
                 }
             }
+
         }
 
+        System.out.println("To process " + NUMBER_OF_PROCESS + " processes, program needed " + cpus.size() + " cpus");
+
+        for (int i = 0; i < cpus.size(); i++) {
+            System.out.println(cpus.get(i) + " processed " + cpus.get(i).getProcessed().size() + " processes");
+        }
     }
 
 }

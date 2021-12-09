@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class ProcessThread extends Thread{
     private static int counter = 0;
     private final int id = counter++;
@@ -7,7 +9,8 @@ public class ProcessThread extends Thread{
     private boolean finished;
     private final int max_time_to_next;
     private final int min_time_to_next;
-    private final Process processes[];
+    private final ArrayList<Process> processes;
+
 
     public ProcessThread(int processes_amount, int max_time_to_next, int min_time_to_next) {
         if(processes_amount <= 0) {
@@ -16,8 +19,7 @@ public class ProcessThread extends Thread{
         this.processes_amount = processes_amount;
         this.max_time_to_next = max_time_to_next;
         this.min_time_to_next = min_time_to_next;
-        this.processes = new Process[processes_amount];
-
+        this.processes = new ArrayList<Process>();
     }
 
     public Process generateProcess(){
@@ -25,11 +27,8 @@ public class ProcessThread extends Thread{
         return new Process(timeToNext, id);
     }
 
-    public synchronized Process getProcess(int i){
-        return processes[i];
-    }
 
-    public synchronized Process[] getAllProcesses(){
+    public synchronized ArrayList<Process> getAllProcesses(){
         return processes;
     }
 
@@ -45,12 +44,11 @@ public class ProcessThread extends Thread{
     @Override
     public void run() {
         System.out.println(this + " started");
-        /**
         try {
 
             for (int i = 0; i < processes_amount; i++) {
                 Process p = generateProcess();
-                processes[i] = p;
+                processes.add(p);
                 System.out.println(String.format("%s  %s time:%4d",p,this, p.getTime()));
 
                 Thread.sleep(p.getTime());
@@ -58,8 +56,9 @@ public class ProcessThread extends Thread{
 
         } catch (InterruptedException e) {
             System.out.println(this + " interrupted");
-        }**/
+        }
         System.out.println(this + " finished");
+
     }
 
 }
