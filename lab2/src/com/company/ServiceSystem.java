@@ -5,7 +5,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class ServiceSystem {
     private static final int NUMBER_OF_PROCESS_THREADS = 1;
-    private static final int NUMBER_OF_PROCESS = 10;
+    private static final int NUMBER_OF_PROCESS = 100;
     private static final int MIN_DURATION = 50;
     private static final int MAX_DURATION = 250;
     private static final int MIN_TIME_TO_NEXT = 10;
