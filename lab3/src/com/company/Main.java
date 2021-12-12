@@ -8,6 +8,7 @@ public class Main {
         System.out.println(findMin(array).get());
         System.out.println(findMax(array).get());
         System.out.println(findElem(array, 6).get());
+        System.out.println(findChecksum(array).get());
     }
 
     public static AtomicInteger findMin(int[] array) {
@@ -71,4 +72,22 @@ public class Main {
         });
         return atomicElemCount;
     }
+
+    public static AtomicInteger findChecksum(int[] array) {
+        AtomicInteger atomicChecksum = new AtomicInteger();
+        IntStream.of(array).parallel().forEach( x -> {
+            int oldValue;
+            int newValue;
+            do {
+                oldValue = atomicChecksum.get();
+                newValue = oldValue + x;
+                newValue = newValue << 3 | newValue >> (32 - 3);
+                newValue ^= 0xFFFFFFFF;
+
+            } while (!atomicChecksum.weakCompareAndSetPlain(oldValue, newValue));
+        });
+
+        return  atomicChecksum;
+    }
+
 }
