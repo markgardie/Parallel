@@ -1,7 +1,5 @@
 package com.company;
 
-import java.sql.Array;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 public class Main {
