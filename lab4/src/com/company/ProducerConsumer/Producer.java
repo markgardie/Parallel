@@ -1,4 +1,4 @@
-package com.company;
+package com.company.ProducerConsumer;
 
 public class Producer implements Runnable {
     Queue queue;

@@ -1,4 +1,4 @@
-package com.company;
+package com.company.ProducerConsumer;
 
 import java.util.concurrent.Semaphore;
 
