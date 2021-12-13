@@ -3,7 +3,7 @@ package com.company.ProducerConsumer;
 public class Producer implements Runnable {
     Queue queue;
 
-    Producer(Queue queue) {
+    public Producer(Queue queue) {
         this.queue = queue;
         new Thread(this, "Producer").start();
     }
