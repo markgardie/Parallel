@@ -13,7 +13,7 @@ public class Philosopher implements Runnable {
     // To randomize eat/Think time
     private Random randomGenerator = new Random();
     // Number of times I was able to eat.
-    private int noOfTurnsToEat = 0;
+    private int numberOfTurnsToEat = 0;
 
     public Philosopher(int id, ChopStick leftChopStick, ChopStick rightChopStick) {
         this.id = id;
@@ -28,13 +28,17 @@ public class Philosopher implements Runnable {
 
     private void eat() throws InterruptedException {
         System.out.println(this + " is eating");
-        noOfTurnsToEat++;
+        numberOfTurnsToEat++;
         Thread.sleep(randomGenerator.nextInt(1000));
     }
 
+    public void setTummyState(boolean isTummyFull) {
+        this.isTummyFull = isTummyFull;
+    }
+
     // Accessors at the end.
-    public int getNoOfTurnsToEat() {
-        return noOfTurnsToEat;
+    public int getNumberOfTurnsToEat() {
+        return numberOfTurnsToEat;
     }
 
     @Override
