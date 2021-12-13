@@ -1,8 +1,10 @@
 package com.company.ProducerConsumer;
 
+import java.util.Random;
+
 public class Consumer implements Runnable {
     private Queue queue;
-    private static final int RANDOM = (int) (Math.random()*(100 - 1) + 1);
+    private Random randomGenerator = new Random();
 
     public Consumer(Queue queue)
     {
@@ -12,7 +14,7 @@ public class Consumer implements Runnable {
 
     public void run()
     {
-        for (int i = 0; i < RANDOM; i++)
+        for (int i = 0; i < randomGenerator.nextInt(100); i++)
             // consumer get items
             queue.get();
     }
