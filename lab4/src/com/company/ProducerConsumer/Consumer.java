@@ -1,7 +1,9 @@
 package com.company.ProducerConsumer;
 
 public class Consumer implements Runnable {
-    Queue queue;
+    private Queue queue;
+    private static final int RANDOM = (int) (Math.random()*(100 - 1) + 1);
+
     public Consumer(Queue queue)
     {
         this.queue = queue;
@@ -10,7 +12,7 @@ public class Consumer implements Runnable {
 
     public void run()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < RANDOM; i++)
             // consumer get items
             queue.get();
     }
