@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Main {
     public static int SIZE = 1000;
     public static int NUMBER_JOBS = 10;

@@ -75,14 +75,13 @@ public class Main {
 
     public static AtomicInteger findChecksum(int[] array) {
         AtomicInteger atomicChecksum = new AtomicInteger();
+        atomicChecksum.set(0);
         IntStream.of(array).parallel().forEach( x -> {
             int oldValue;
             int newValue;
             do {
                 oldValue = atomicChecksum.get();
-                newValue = oldValue + x;
-                newValue = newValue << 3 | newValue >> (32 - 3);
-                newValue ^= 0xFFFFFFFF;
+                newValue = oldValue ^ x;
 
             } while (!atomicChecksum.weakCompareAndSetPlain(oldValue, newValue));
         });
