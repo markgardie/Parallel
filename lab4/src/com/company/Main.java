@@ -5,17 +5,22 @@ import com.company.DiningPhilosopher.Philosopher;
 import com.company.ProducerConsumer.Consumer;
 import com.company.ProducerConsumer.Producer;
 import com.company.ProducerConsumer.Queue;
+import com.company.SleepingBarber.Barber;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class Main {
     private static final int NUMBER_OF_PHILOSOPHER = 5;
     private static final int SIMULATION_MILLIS = 1000 * 10;
+    private static final int NUMBER_OF_CUSTOMERS = 5;
+    private static final int NUM_ITERATION = 8;
 
     public static void main(String[] args) throws InterruptedException {
-	    producerConsumer();
-	    diningPhilosophers();
+	    //producerConsumer();
+	    //diningPhilosophers();
+	    sleepingBarber();
     }
 
     public static void producerConsumer() {
@@ -76,4 +81,43 @@ public class Main {
             }
         }
     }
+
+    public static void sleepingBarber() throws InterruptedException {
+        ExecutorService executor = Executors.newWorkStealingPool();
+        Barber barber = new Barber(NUMBER_OF_CUSTOMERS);
+
+
+        Callable<Void> barberTask = barber::startService;
+        Callable<Void> receiveCustomerTask = barber::receiveNewCustomer;
+
+        List<Future<Void>> barberFutures = new ArrayList<>();
+        List <Future<Void>> customerFutures = new ArrayList<>();
+
+
+        for (int i=0; i<NUM_ITERATION; i++) {
+            Future <Void> barberFuture = executor.submit(barberTask);
+            barberFutures.add(barberFuture);
+
+            Future <Void> customerFuture = executor.submit(receiveCustomerTask);
+            customerFutures.add(customerFuture);
+        }
+
+        barberFutures.forEach(future -> {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+
+        customerFutures.forEach(future -> {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
 }

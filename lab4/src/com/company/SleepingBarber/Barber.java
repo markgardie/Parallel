@@ -30,7 +30,7 @@ public class Barber {
 
     }
 
-    public void startService() {
+    public Void startService() {
 
         // wait for a customer to arrive
         try {
@@ -55,6 +55,8 @@ public class Barber {
         // signal the customer that barber is done
         barberDone.release();
         System.out.println("Haircut is done");
+
+        return null;
     }
 
     public Void receiveNewCustomer() {
@@ -67,6 +69,7 @@ public class Barber {
         if (customers == limit) {
             mutex.unlock();
             customer.leave();
+            return null;
         }
         customers += 1;
         mutex.unlock();
@@ -99,6 +102,7 @@ public class Barber {
 
         return null;
     }
+
 
     public void cutHair() {
         System.out.println("Barber: Cutting Hair --- " + Thread.currentThread().getName());
