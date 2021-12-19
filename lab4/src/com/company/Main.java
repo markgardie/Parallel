@@ -14,7 +14,7 @@ public class Main {
     private static final int SIMULATION_MILLIS = 1000 * 10;
 
     public static void main(String[] args) throws InterruptedException {
-	    //producerConsumer();
+	    producerConsumer();
 	    diningPhilosophers();
     }
 
