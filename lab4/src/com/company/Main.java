@@ -26,7 +26,7 @@ public class Main {
 	    //producerConsumer();
 	    //diningPhilosophers();
 	    //sleepingBarber();
-        //writerReader();
+        writerReader();
     }
 
     public static void producerConsumer() {
