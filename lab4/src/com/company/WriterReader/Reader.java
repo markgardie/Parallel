@@ -1,17 +1,16 @@
 package com.company.WriterReader;
 
-public class Writer implements Runnable {
+public class Reader implements Runnable {
     private ReadWriteLock RW_lock;
 
 
-    public Writer(ReadWriteLock rw) {
+    public Reader(ReadWriteLock rw) {
         RW_lock = rw;
     }
-
     public void run() {
         while (RW_lock.keepWorking()){
             try {
-                RW_lock.writeLock();
+                RW_lock.readLock();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

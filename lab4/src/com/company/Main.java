@@ -6,21 +6,27 @@ import com.company.ProducerConsumer.Consumer;
 import com.company.ProducerConsumer.Producer;
 import com.company.ProducerConsumer.Queue;
 import com.company.SleepingBarber.Barber;
+import com.company.WriterReader.ReadWriteLock;
+import com.company.WriterReader.Reader;
+import com.company.WriterReader.Writer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
 public class Main {
-    private static final int NUMBER_OF_PHILOSOPHER = 5;
+    private static final int NUM_PHILOSOPHERS = 5;
     private static final int SIMULATION_MILLIS = 1000 * 10;
-    private static final int NUMBER_OF_CUSTOMERS = 5;
+    private static final int NUM_CUSTOMERS = 5;
     private static final int NUM_ITERATION = 8;
+    private static final int NUM_READERS = 5;
+    private static final int NUM_WRITERS = 5;
 
     public static void main(String[] args) throws InterruptedException {
 	    //producerConsumer();
 	    //diningPhilosophers();
-	    sleepingBarber();
+	    //sleepingBarber();
+        writerReader();
     }
 
     public static void producerConsumer() {
@@ -40,20 +46,20 @@ public class Main {
         Philosopher[] philosophers = null;
         try {
 
-            philosophers = new Philosopher[NUMBER_OF_PHILOSOPHER];
+            philosophers = new Philosopher[NUM_PHILOSOPHERS];
 
             //As many forks as Philosophers
-            ChopStick[] chopSticks = new ChopStick[NUMBER_OF_PHILOSOPHER];
+            ChopStick[] chopSticks = new ChopStick[NUM_PHILOSOPHERS];
             // Cannot do this as it will fill the whole array with the SAME chopstick.
             //Arrays.fill(chopSticks, new ReentrantLock());
-            for (int i = 0; i < NUMBER_OF_PHILOSOPHER; i++) {
+            for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
                 chopSticks[i] = new ChopStick(i);
             }
 
-            executorService = Executors.newFixedThreadPool(NUMBER_OF_PHILOSOPHER);
+            executorService = Executors.newFixedThreadPool(NUM_PHILOSOPHERS);
 
-            for (int i = 0; i < NUMBER_OF_PHILOSOPHER; i++) {
-                philosophers[i] = new Philosopher(i, chopSticks[i], chopSticks[(i + 1) % NUMBER_OF_PHILOSOPHER]);
+            for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+                philosophers[i] = new Philosopher(i, chopSticks[i], chopSticks[(i + 1) % NUM_PHILOSOPHERS]);
                 executorService.execute(philosophers[i]);
             }
             // Main thread sleeps till time of simulation
@@ -84,7 +90,7 @@ public class Main {
 
     public static void sleepingBarber() throws InterruptedException {
         ExecutorService executor = Executors.newWorkStealingPool();
-        Barber barber = new Barber(NUMBER_OF_CUSTOMERS);
+        Barber barber = new Barber(NUM_CUSTOMERS);
 
 
         Callable<Void> barberTask = barber::startService;
@@ -117,6 +123,29 @@ public class Main {
                 e.printStackTrace();
             }
         });
+
+    }
+
+    public static void writerReader() throws InterruptedException {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        ReadWriteLock RW = new ReadWriteLock();
+
+        for (int i = 0; i < NUM_WRITERS; i++) {
+            executorService.execute(new Writer(RW));
+        }
+
+        for (int i = 0; i < NUM_READERS; i++) {
+            executorService.execute(new Reader(RW));
+        }
+
+        try {
+            executorService.awaitTermination(5, TimeUnit.SECONDS);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            RW.stopThreads();
+            executorService.shutdown();
+        }
 
     }
 
