@@ -4,8 +4,8 @@ public class Main {
     public static int SIZE = 1000;
     public static int NUMBER_JOBS = 10;
     public static int RANDOM_KOEF = 100;
-    public static void main(String [] args ) throws InterruptedException{
 
+    public static void main(String [] args ) throws InterruptedException{
 
         double vect[] = new double [SIZE];
 
@@ -13,6 +13,13 @@ public class Main {
             vect[i]= Math.random() * RANDOM_KOEF;
         }
 
+       serial(vect);
+       parallel(vect);
+
+
+    }
+
+    public static void serial(double[] vect)  {
         double maxSerial =vect[0];
         double minSerial = vect[0];
 
@@ -29,7 +36,9 @@ public class Main {
 
         System.out.println("Max:" + maxSerial);
         System.out.println("Min:" + minSerial);
+    }
 
+    public static void parallel(double[] vect) throws InterruptedException {
         MyThread TreadArrray[] = new MyThread[NUMBER_JOBS];
 
         for(int i = 0; i < NUMBER_JOBS; i++){
@@ -39,6 +48,7 @@ public class Main {
                     i== NUMBER_JOBS -1 ?SIZE:SIZE/ NUMBER_JOBS * (i + 1) );
             TreadArrray[i].start();
         }
+
         for(int i = 0; i < NUMBER_JOBS; i++){
             TreadArrray[i].join();
         }
@@ -53,6 +63,6 @@ public class Main {
 
         System.out.println("Max:" + maxParallel);
         System.out.println("Min:" + minParallel);
-
     }
+
 }
